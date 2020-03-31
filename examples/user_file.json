@@ -1,0 +1,152 @@
+{
+  "email_address": "johndoe@example.tld",
+  "name": "John Doe",
+  "addresses": [
+    {
+      "address": "twit12mzqnjk8tawg3h2jnmp0vfzjttnzgsm9tmnp65",
+      "amount": 5000,
+      "timelock": 1602633600
+    },
+    {
+      "address": "twit18p05flrzyuy4vqpwqm2svp7xcquv58uk9p956y",
+      "amount": 5000,
+      "timelock": 1605229200
+    },
+    {
+      "address": "twit168jdf4mpxznxtw6d52p0k6j8cyy4hwtjja4384",
+      "amount": 5000,
+      "timelock": 1607821200
+    },
+    {
+      "address": "twit1jjufgg2pfhy04n0pqeutwrgj9r5czgj43uy65h",
+      "amount": 5000,
+      "timelock": 1610413200
+    },
+    {
+      "address": "twit1rmmf3fat2anjqst60axzqg4tgs9vpvy3p25msc",
+      "amount": 5000,
+      "timelock": 1613005200
+    },
+    {
+      "address": "twit1rcxuy0tvu0fy5adks5cjnukp6xhwrdggc5qupm",
+      "amount": 5000,
+      "timelock": 1615597200
+    },
+    {
+      "address": "twit1n4qt5gjr2dahzu6teltkqj9dtvg3g3nrcqy324",
+      "amount": 5000,
+      "timelock": 1618185600
+    },
+    {
+      "address": "twit1pp58xrn4vlm9r0naumcnc9y5g4g642k0jex8z3",
+      "amount": 5000,
+      "timelock": 1620777600
+    },
+    {
+      "address": "twit1vsmam4sd4dedtwagc9pz604fnjm0ygga8ydxjg",
+      "amount": 5000,
+      "timelock": 1623369600
+    },
+    {
+      "address": "twit1rf4xfn98l8h4wf59j0hmtj22tzemj2jdq3qc04",
+      "amount": 5000,
+      "timelock": 1625961600
+    },
+    {
+      "address": "twit15x6ud4h0r5v6c5vrwjusd4t0v45p9y4rt5c68p",
+      "amount": 5000,
+      "timelock": 1628553600
+    },
+    {
+      "address": "twit1xfguug9c6epvmvq2xsu2fqycvkgvjhtn4zs07r",
+      "amount": 5000,
+      "timelock": 1631145600
+    },
+    {
+      "address": "twit1e0h58r8p40j8plh0keqk4cn98ac77c0hvqe96r",
+      "amount": 5000,
+      "timelock": 1633737600
+    },
+    {
+      "address": "twit1w3qza8v56whmds90y6x2pgzptqc084v9l6rgy2",
+      "amount": 5000,
+      "timelock": 1636333200
+    },
+    {
+      "address": "twit12ml96zx8h7pv4zyp9qv330028flt07cv28syvu",
+      "amount": 5000,
+      "timelock": 1638925200
+    },
+    {
+      "address": "twit1gjlsxxnwp5s9ea2rty3yev6lwlg6w2h2dt9y8c",
+      "amount": 5000,
+      "timelock": 1641517200
+    },
+    {
+      "address": "twit1hsdf4l4hx4y4caf935sdz2tq8dnuqhwug5l8g2",
+      "amount": 5000,
+      "timelock": 1644109200
+    },
+    {
+      "address": "twit1usedyrk74jqfsduts259d35w02gnzf05k29u3q",
+      "amount": 5000,
+      "timelock": 1646701200
+    },
+    {
+      "address": "twit1z29e470vckdyqc6wnw9zdzcf4cut63a83mkajm",
+      "amount": 5000,
+      "timelock": 1649289600
+    },
+    {
+      "address": "twit1qn6v04hq3acrx756g0yyqyus5deuwmtlld6h2z",
+      "amount": 500,
+      "timelock": 1651881600
+    },
+    {
+      "address": "twit1896zvtsngkxq4ues53x4qgjs6779c070pl6vsx",
+      "amount": 500,
+      "timelock": 1651881600
+    },
+    {
+      "address": "twit1jtz3anjjcfyc3ghfqe4qnnfz72v48nyx7pwa5y",
+      "amount": 500,
+      "timelock": 1651881600
+    },
+    {
+      "address": "twit1kzucvuv22j9dcdd8a3aj9d6v9a7mpa6kq5yzzf",
+      "amount": 500,
+      "timelock": 1651881600
+    },
+    {
+      "address": "twit1eppaflp7ldfdhs9h4mff5c4w3a86f6x8ycn82v",
+      "amount": 500,
+      "timelock": 1651881600
+    },
+    {
+      "address": "twit12va9qmlxxgfng79w48sfpf3rhl4jue5qef38my",
+      "amount": 500,
+      "timelock": 1651881600
+    },
+    {
+      "address": "twit1y4jrnu6fmhyp3z93u5fyr40z82mvsjg0ygsa0l",
+      "amount": 500,
+      "timelock": 1651881600
+    },
+    {
+      "address": "twit1wah0ucmspk7jcy243qqfheur5wmgwnj2qtdkjc",
+      "amount": 500,
+      "timelock": 1651881600
+    }
+  ],
+  "disclaimers": {
+    "disclaimer_1": {
+      "public_key": "0294be5cf1383b8ba56cafccbe51bbdaf2faa83f99ed500de38c2c5a84b3abff8e",
+      "signature": "3045022100e84b9883b980ea236c9f489de211b33052ce9db16401d73bd59e3bcd8084823e022061c2af7c669e43a3ab27db697f614ac7dcaf6e84ebb5d18fbb7f2ca1f5b1a835"
+    },
+    "disclaimer_2": {
+      "public_key": "0294be5cf1383b8ba56cafccbe51bbdaf2faa83f99ed500de38c2c5a84b3abff8e",
+      "signature": "304402203b0b519da9761ce18e4f123fe9796b5a9fb210ec48d735e43ebd0f0a464018e702207a34f7dbd7c547c53b8537355564583752fb54c402f731ec9f3de58ac6d157f7"
+    }
+  },
+  "signature": "3046022100fe42e296341afdd66f0574ca214b961f87ec548c003d23d89e3c2cc3ed0523830221008b28566d539d45e84f8db25408661403c08fc68a6ed99aac475a8a7a75d82401"
+}
