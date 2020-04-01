@@ -45,7 +45,7 @@ def run_sign_command(data, pem_file_path):
 
 def main(args):
     # Create output dir if it doesn't exist
-    pathlib.Path(args.output_dir).mkdir(parents=True, exist_ok=True)
+    pathlib.Path(args.output_dir).mkdir(parents=True, exist_ok=False)
     #print(args)
     with open(args.csv_file) as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
@@ -61,11 +61,19 @@ def main(args):
                 print(f"Creating {out_file_name} with data:")
                 with open(out_file_name, 'w') as outfile:
                     j = {}
+                    # TODO: obtain vesting from somewhere
+                    vesting = {
+                        "delay": 0,
+                        "cliff": 15552000,
+                        "installment_length": 2592000,
+                        "installment_wits": 5000,
+                    }
                     data = {
                         "email_address": email_address,
                         "name": name,
                         "usd": usd,
                         "wit": wit,
+                        "vesting": vesting,
                         "genesis_date": GENESIS_TIMESTAMP,
                     }
                     signature = sign_data(data, args.key)
@@ -83,7 +91,7 @@ if __name__ == '__main__':
     parser.add_argument('csv_file',
                         help='input CSV file')
     parser.add_argument('--output-dir', default='genesis_participant_proofs',
-                        help='where to write the JSON files')
+                        help='where to write the JSON files (default: "%(default)s")')
     parser.add_argument('--key', required=True,
                         help="secp256k1 private key used for signing, in openssl .pem format\n")
     args = parser.parse_args()
