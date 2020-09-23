@@ -2,33 +2,33 @@
 
 const fs = require('fs')
 const assert = require('assert').strict
-const CLAIMING_ADDRESS_MIN_WITS = 50
+const CLAIMING_ADDRESS_MIN_NANOWITS = 50_000_000_000
+
+const participantProofFilePath = process.argv[2] || 'examples/2_participant_proof.json'
+const tokensClaimFilePath = process.argv[3] || 'examples/3_participant_signed_claim.json'
 
 try {
-  const foundationFilePath = process.argv[2] || 'foundation_file.json'
-  const userFilePath = process.argv[3] || 'user_file.json'
-
-  const foundationFile = JSON.parse(fs.readFileSync(foundationFilePath))
-  const userFile = JSON.parse(fs.readFileSync(userFilePath))
+  const participantProof = JSON.parse(fs.readFileSync(participantProofFilePath))
+  const tokensClaim = JSON.parse(fs.readFileSync(tokensClaimFilePath))
 
   const unlockedAmountByDate = calculateUnlockedAmountByDate(
-    foundationFile.data.vesting,
-    foundationFile.data.wit,
-    foundationFile.data.genesis_date * 10 ** 3
+    participantProof.data.vesting,
+    participantProof.data.wit,
+    participantProof.data.genesis_date * 10 ** 3
   )
   const addressesToGenerateByUnlockDate = unlockedAmountByDate.map(
     ({ amount }) => groupAmountByUnlockDate(amount)
   )
   const userFileValidator = createUserFile(
     calculateAddresses(unlockedAmountByDate, addressesToGenerateByUnlockDate),
-    foundationFile
+    participantProof
   )
 
-  if (!validateFile(userFileValidator, userFile)) {
+  if (!validateFile(userFileValidator, tokensClaim)) {
     throw Error()
   }
 } catch (_) {
-  console.log(`Error validating ${userFilePath} with ${foundationFilePath}`)
+  console.log(`Error validating ${tokensClaimFilePath} with ${participantProofFilePath}`)
   process.exit(1)
 }
 
@@ -67,14 +67,15 @@ function calculateUnlockedAmountByDate (vestingInfo, amount, genesisTimestamp) {
   return steps
 }
 
-function createUserFile (claimingAddresses, foundationClaimingInfo) {
+function createUserFile (claimingAddresses, participantProof) {
   return {
-    email_address: foundationClaimingInfo.data.email_address,
-    name: foundationClaimingInfo.data.name,
+    email_address: participantProof.data.email_address,
+    name: participantProof.data.name,
+    source: participantProof.data.source,
     addresses: claimingAddresses,
-    // TODO: Check that all disclaimers are signed when they are defined
+    // Disclaimers are validated on the Python side
     disclaimers: {},
-    signature: foundationClaimingInfo.signature
+    signature: participantProof.signature
   }
 }
 
@@ -82,17 +83,17 @@ function groupAmountByUnlockDate (amount) {
   if (amount === 0) return []
   const ceil = precision => x => Math.ceil(x / precision) * precision
   const roundedAmount =
-    amount % CLAIMING_ADDRESS_MIN_WITS === 0
+    amount % CLAIMING_ADDRESS_MIN_NANOWITS === 0
       ? amount
-      : ceil(CLAIMING_ADDRESS_MIN_WITS)(amount)
+      : ceil(CLAIMING_ADDRESS_MIN_NANOWITS)(amount)
 
-  return (roundedAmount / CLAIMING_ADDRESS_MIN_WITS)
+  return (roundedAmount / CLAIMING_ADDRESS_MIN_NANOWITS)
     .toString()
     .split('')
     .map(Number)
     .reverse()
     .map((x, exp) => {
-      return new Array(x).fill(50 * 10 ** exp)
+      return new Array(x).fill(CLAIMING_ADDRESS_MIN_NANOWITS * 10 ** exp)
     })
     .reduce((a, b) => [...a, ...b])
 }
@@ -102,12 +103,13 @@ function validateFile (fileValidator, file) {
     amount,
     timelock
   }))
-  // TODO Remove this line when disclaimers are defined
+  // Disclaimers are validated on the Python side
   file.disclaimers = {}
   try {
     assert.deepEqual(fileValidator, file)
     return true
   } catch (err) {
+    console.error("DeepEqual assertion failed:", err)
     return false
   }
 }
