@@ -17,7 +17,7 @@ try {
     participantProof.data.genesis_date * 10 ** 3
   )
   const addressesToGenerateByUnlockDate = unlockedAmountByDate.map(
-    ({ amount }) => groupAmountByUnlockDate(amount)
+    ({ amount }) => groupAmountByUnlockedDate(amount)
   )
   const userFileValidator = createUserFile(
     calculateAddresses(unlockedAmountByDate, addressesToGenerateByUnlockDate),
@@ -79,23 +79,25 @@ function createUserFile (claimingAddresses, participantProof) {
   }
 }
 
-function groupAmountByUnlockDate (amount) {
-  if (amount === 0) return []
-  const ceil = precision => x => Math.ceil(x / precision) * precision
-  const roundedAmount =
-    amount % CLAIMING_ADDRESS_MIN_NANOWITS === 0
-      ? amount
-      : ceil(CLAIMING_ADDRESS_MIN_NANOWITS)(amount)
+function groupAmountByUnlockedDate(amount, base = 2) {
+  const exp = Math.log(amount) / Math.log(base)
 
-  return (roundedAmount / CLAIMING_ADDRESS_MIN_NANOWITS)
-    .toString()
-    .split('')
-    .map(Number)
-    .reverse()
-    .map((x, exp) => {
-      return new Array(x).fill(CLAIMING_ADDRESS_MIN_NANOWITS * 10 ** exp)
-    })
-    .reduce((a, b) => [...a, ...b])
+  return factor(amount, base, exp.toFixed())
+}
+
+function factor(amount, base = 10, exp = 100) {
+  if (amount === 0) return []
+
+  const power = base ** exp
+
+  if (CLAIMING_ADDRESS_MIN_NANOWITS > amount)
+    return [CLAIMING_ADDRESS_MIN_NANOWITS]
+
+  if (power > amount) {
+    return factor(amount, base, exp - 1)
+  }
+
+  return [power, ...factor(amount - power, base, exp)]
 }
 
 function validateFile (fileValidator, file) {
