@@ -9,6 +9,7 @@ import pathlib
 import re
 import random
 import shutil
+import string
 
 import patoolib
 
@@ -156,6 +157,10 @@ def flatten_directory(path: str) -> bool:
             shutil.rmtree(entry.path)
 
     return is_flatten
+
+
+def generate_random_string(length: int = 32):
+    return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(length))
 
 
 def group_amount_by_powers(amount: int, base: int = 10):

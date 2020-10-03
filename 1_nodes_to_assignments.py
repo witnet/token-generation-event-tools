@@ -8,7 +8,7 @@ import shutil
 
 from constants import TOTAL_TOKENS_IN_TIP, NANOWITS_PER_WIT
 from helpers import mkdirp, csv_map, download_file, SetEncoder, decompress_all_in_path, validate_secp256k1_signature, \
-    derive_address_from_public_key
+    derive_address_from_public_key, generate_random_string
 
 PARTICIPANTS = 'participants'
 MAPS = 'maps'
@@ -337,8 +337,9 @@ def write_assignments(config, stats):
             email = stats[MAPS][EMAIL_BY_WIT_ID].get(wit_id)
             name = stats[MAPS][NAME_BY_WIT_ID].get(wit_id)
             if email:
-                print(f'Will be assigning {reward} nanowits to {wit_id}, using "{email}" for the participant proof')
-                output_file.write(f'{email},{name},,{reward},tip\n')
+                secret = generate_random_string(32)
+                print(f'Will be assigning {reward} nanowits to {wit_id}, using email "{email}" and secret "{secret}" for the participant proof')
+                output_file.write(f'{email},{name},,{reward},tip,{secret}\n')
             else:
                 print(f'Tried to assign {reward} nanowits to {wit_id} but cannot find their email')
 
