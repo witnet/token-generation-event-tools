@@ -208,7 +208,10 @@ def load_direct_assignment_for_wit_id(stats, wit_id, reward):
     if reward != '':
         reward = int(reward) * NANOWITS_PER_WIT
         # Add the directly assigned reward to the wit_id
-        stats[REWARDS][BY_WIT_ID][wit_id] = stats[REWARDS][BY_WIT_ID].get(wit_id, 0) + reward
+        if wit_id in stats[PARTICIPANTS][KYC][WIT_IDS]:
+            stats[REWARDS][BY_WIT_ID][wit_id] = stats[REWARDS][BY_WIT_ID].get(wit_id, 0) + reward
+        else:
+            print(f'Will not directly assign {reward} nanowits to {wit_id} because of missing KYC')
 
         # Update totals
         stats[REWARDS][TOTAL] += reward
