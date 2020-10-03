@@ -335,7 +335,7 @@ def whitelist_wit_id(stats, first_name, last_name, email, _nationality, _wallet_
 
 def write_assignments(config, stats):
     with open(config.output_file, 'w') as output_file:
-        output_file.write(f'email_address,name,usd,nanowit,source\n')
+        output_file.write(f'email_address,name,usd,nanowit,source,secret\n')
         for wit_id, reward in stats[REWARDS][BY_WIT_ID].items():
             email = stats[MAPS][EMAIL_BY_WIT_ID].get(wit_id)
             name = stats[MAPS][NAME_BY_WIT_ID].get(wit_id)

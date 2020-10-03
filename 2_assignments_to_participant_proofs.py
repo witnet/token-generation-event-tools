@@ -90,7 +90,7 @@ def process_all_assignment_files(config, stats: dict) -> int:
     return line_count
 
 
-def process_participant(config, stats: dict, email_address: str, name: str, usd: str, nanowit: str, source: str):
+def process_participant(config, stats: dict, email_address: str, name: str, usd: str, nanowit: str, source: str, secret: str):
     # Do integer conversions and derive wit from usd when needed
     try:
         usd = int(usd)
@@ -103,7 +103,7 @@ def process_participant(config, stats: dict, email_address: str, name: str, usd:
     else:
         nanowit = int(nanowit)
 
-    out_file_name = os.path.join(config.output_dir, f'{source}_{email_address}_participant_proof.json')
+    out_file_name = os.path.join(config.output_dir, f'{source}_{email_address}_{secret}_participant_proof.json')
     print(f"\tCreating {out_file_name}")
     with open(out_file_name, 'w') as outfile:
         proof = {}
@@ -141,7 +141,7 @@ def main(config):
     unassigned = GENESIS_TOTAL_WITS * NANOWITS_PER_WIT - stats["total"]["wits"]
     stats["total"]["wits_not_for_foundation"] = stats["total"]["wits"]
     stats["total"]["wits_unlocked"] = stats["total"]["wits"] - stats["founder"]["wits"] - stats["stakeholder"]["wits"]
-    process_participant(config, stats, "info@witnet.foundation", "Witnet Foundation", 0, unassigned, "foundation")
+    process_participant(config, stats, "info@witnet.foundation", "Witnet Foundation", 0, unassigned, "foundation", "HvHGJKeOUmOdrZWoaM6LoVJsjNIY4sjq")
 
     for source_stats in stats:
         stats[source_stats]["percentage_over_total_supply"] = round(
