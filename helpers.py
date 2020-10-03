@@ -76,16 +76,15 @@ def derive_address_from_public_key(public_key: str) -> str:
     return bech32.bech32_encode(BECH32_PREFIX, data)
 
 
-def decompress_all_in_path(input_dir: str, output_dir: str):
-    for file_name in os.listdir(input_dir):
-        match = re.search("(.*)\.(tar\.gz|zip|rar|tar|7z)", file_name)
+def decompress_all_in_path(input_dir: str, output_dir: str, nesting: int = 0):
+    for compressed_file in os.scandir(input_dir):
+        match = re.search("(.*)\.(tar\.gz|zip|rar|tar|7z)", compressed_file.name)
         if match:
-            file_path = os.path.join(input_dir, file_name)
-            print(f'Decompressing "{file_path}"')
+            print(f'Decompressing "{compressed_file.path}". Nesting is {nesting}')
 
             # Use a temporal folder for extracting so that we can overwrite if needed (otherwise patool freezes)
             temp_dir = os.path.join(output_dir, 'temp')
-            temp_output_dir = os.path.join(temp_dir, match.group(1))
+            temp_output_dir = os.path.join(temp_dir, f'{match.group(1)}_{nesting}')
             print(f'\tUsing "{temp_output_dir}" as temporal output directory')
             if os.path.exists(temp_output_dir):
                 print(f'\tDirectory "{temp_output_dir}" already existed, wiping it now')
@@ -94,9 +93,9 @@ def decompress_all_in_path(input_dir: str, output_dir: str):
 
             # Extract contents into temporal directory
             try:
-                patoolib.extract_archive(file_path, outdir=temp_output_dir, verbosity=-1)
+                patoolib.extract_archive(compressed_file.path, outdir=temp_output_dir, verbosity=-1)
             except:
-                print(f'\tCompressed file "{file_path}" seems corrupted!')
+                print(f'\tCompressed file "{compressed_file.path}" seems corrupted!')
 
             # Flatten temporal directory, so as to deal with accidental nesting
             while True:
@@ -112,8 +111,11 @@ def decompress_all_in_path(input_dir: str, output_dir: str):
                     print(f'\tCopying "{temp_file_path}" into "{output_file_path}"')
                     shutil.copyfile(temp_file_path, output_file_path)
 
+            # Decompress recursively
+            decompress_all_in_path(temp_output_dir, output_dir, nesting + 1)
+
             # Get rid of temporal directories
-            shutil.rmtree(temp_dir)
+            #shutil.rmtree(temp_dir)
 
 
 def download_file(url: str, output_dir: str, overwrite=True, prefix='') -> bool:

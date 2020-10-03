@@ -4,6 +4,7 @@ import argparse
 import json
 import os
 import re
+import shutil
 
 from constants import TOTAL_TOKENS_IN_TIP, NANOWITS_PER_WIT
 from helpers import mkdirp, csv_map, download_file, SetEncoder, decompress_all_in_path, validate_secp256k1_signature, \
@@ -164,17 +165,24 @@ def compute_reward_for_wit_id(stats, wit_id, blocks, blocks_in_program):
     stats[REWARDS][TOTAL_FROM_BLOCKS] += reward
 
 
+def copy_injections(from_dir, to_dir):
+    if os.path.isdir(from_dir):
+        for file in os.scandir(from_dir):
+            output_path = os.path.join(to_dir, file.name)
+            shutil.copyfile(file.path, output_path)
+
+
 def download_all_participants(config, stats):
-    csv_map(config.nodes_csv_file, lambda i, row: download_participant(config, stats, *row), skip_header=True,
+    csv_map(config.nodes_csv_file, lambda i, row: download_participant(config, stats, i, *row), skip_header=True,
             limit=int(config.limit))
 
 
-def download_participant(config, stats, email, wit_id, claim_file_url, *_args):
+def download_participant(config, stats, i, email, wit_id, claim_file_url, *_args):
     stats[PARTICIPANTS][FROM_CSV][WIT_IDS].add(wit_id)
     stats[PARTICIPANTS][FROM_CSV][EMAILS].add(email)
     stats[MAPS][EMAIL_BY_WIT_ID][wit_id] = email
 
-    if not download_file(claim_file_url, config.claims_output_dir, overwrite=False, prefix=wit_id):
+    if not download_file(claim_file_url, config.claims_output_dir, overwrite=False, prefix=f'{wit_id}_{i}'):
         print(f'Failed to download claim file from "{claim_file_url}"')
         return
 
@@ -343,6 +351,7 @@ def main(config):
 
     # Main procedures
     download_all_participants(config, stats)
+    copy_injections('./tip/manual_claims', config.claims_output_dir)
     decompress_all_in_path(config.claims_output_dir, config.claims_output_dir)
     validate_all_claims(config, stats)
     load_kyc(config, stats)
