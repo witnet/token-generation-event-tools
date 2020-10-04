@@ -75,12 +75,12 @@ class ClaimingFile:
 def get_disclaimers_for_source(source: str) -> list:
     return {
         SOURCE_DPA: DISCLAIMERS,
-        SOURCE_FOUNDATION: DISCLAIMERS[1:],
-        SOURCE_FOUNDER: DISCLAIMERS,
+        SOURCE_FOUNDATION: DISCLAIMERS[3:],
+        SOURCE_FOUNDER: DISCLAIMERS[3:],
         SOURCE_PPA: DISCLAIMERS,
         SOURCE_SAFT: DISCLAIMERS,
-        SOURCE_STAKEHOLDER: DISCLAIMERS[1:],
-        SOURCE_TIP: DISCLAIMERS[1:],
+        SOURCE_STAKEHOLDER: DISCLAIMERS[3:],
+        SOURCE_TIP: DISCLAIMERS[3:],
     }.get(source, DISCLAIMERS)
 
 
