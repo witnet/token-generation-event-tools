@@ -197,14 +197,14 @@ def load_all_blocks_counts(config, stats):
 
 
 def load_all_direct_assignments(config, stats):
-    csv_map(config.direct_assignment_csv_file, lambda i, row: load_direct_assignment_for_wit_id(stats, *row[2:4]))
+    csv_map(config.direct_assignment_csv_file, lambda i, row: load_direct_assignment_for_wit_id(stats, *row))
 
 
 def load_blocks_count(stats, file_path):
     csv_map(file_path, lambda i, row: ascribe_blocks_to_address(stats, *row))
 
 
-def load_direct_assignment_for_wit_id(stats, wit_id, reward):
+def load_direct_assignment_for_wit_id(stats, email, wit_id, _a, _b, _c, _d, _e, _f, _g,reward):
     if reward != '':
         reward = int(reward) * NANOWITS_PER_WIT
         # Add the directly assigned reward to the wit_id
@@ -218,6 +218,10 @@ def load_direct_assignment_for_wit_id(stats, wit_id, reward):
         stats[REWARDS][TOTAL_DIRECT] += reward
 
         print(f'Directly assigned {reward} nanowits to {wit_id}')
+
+    # Update email with the original signup email
+    if email:
+        stats[MAPS][EMAIL_BY_WIT_ID][wit_id] = email.lower()
 
 
 def load_kyc(config, stats):
@@ -319,18 +323,18 @@ def validate_claim_signature(claim) -> bool:
         return False
 
 
-def whitelist_wit_id(stats, first_name, last_name, email, _nationality, _wallet_address, _email_match, correct_email,
+def whitelist_wit_id(stats, first_name, last_name, email, _nationality, wallet_address, _email_match, correct_email,
                      wit_id, *_args):
-    wit_id = f'WIT_{wit_id}'
+    wit_id = f'WIT_{wit_id or wallet_address}'
 
     stats[PARTICIPANTS][KYC][WIT_IDS].add(wit_id)
     stats[PARTICIPANTS][KYC][EMAILS].add(email)
 
     # Take note of WIT_ID <> email and WIT_ID <> name relation
-    stats[MAPS][EMAIL_BY_WIT_ID][wit_id] = email or correct_email
-    stats[MAPS][NAME_BY_WIT_ID][wit_id] = f'{first_name} {last_name}'
+    stats[MAPS][EMAIL_BY_WIT_ID].setdefault(wit_id, email or correct_email)
+    stats[MAPS][NAME_BY_WIT_ID][wit_id] = f'{first_name} {last_name}' if last_name else first_name
 
-    print(f'{wit_id} ({first_name} {last_name}) passed KYC with email "{email}"')
+    print(f'{wit_id} ({stats[MAPS][NAME_BY_WIT_ID][wit_id]}) passed KYC with email "{email}"')
 
 
 def write_assignments(config, stats):
@@ -354,9 +358,9 @@ def main(config):
     stats = init_stats()
 
     # Main procedures
-    download_all_participants(config, stats)
-    copy_injections('./tip/manual_claims', config.claims_output_dir)
-    decompress_all_in_path(config.claims_output_dir, config.claims_output_dir)
+    #download_all_participants(config, stats)
+    #copy_injections('./tip/manual_claims', config.claims_output_dir)
+    #decompress_all_in_path(config.claims_output_dir, config.claims_output_dir)
     validate_all_claims(config, stats)
     load_kyc(config, stats)
 

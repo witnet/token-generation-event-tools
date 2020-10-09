@@ -93,7 +93,7 @@ def process_all_assignment_files(config, stats: dict) -> int:
 def process_participant(config, stats: dict, email_address: str, name: str, usd: str, nanowit: str, source: str, secret: str):
     # Do integer conversions and derive wit from usd when needed
     try:
-        usd = int(usd)
+        usd = float(usd)
     except:
         usd = 0
 
@@ -103,7 +103,7 @@ def process_participant(config, stats: dict, email_address: str, name: str, usd:
     else:
         nanowit = int(nanowit)
 
-    out_file_name = os.path.join(config.output_dir, f'{source}_{email_address}_{secret}_participant_proof.json')
+    out_file_name = os.path.join(config.output_dir, f'{source}_{email_address}_{secret}_participant.proof')
     print(f"\tCreating {out_file_name}")
     with open(out_file_name, 'w') as outfile:
         proof = {}
@@ -150,8 +150,8 @@ def main(config):
             stats["total"]["wits"]) * 100, 2)
         stats[source_stats]["percentage_over_not_for_foundation"] = round(float(stats[source_stats]["wits"]) / float(
             stats["total"]["wits_not_for_foundation"]) * 100, 2)
-        stats[source_stats]["percentage_over_unlocked"] = round(float(stats[source_stats]["wits"]) / float(
-            stats["total"]["wits_unlocked"]) * 100, 2)
+        #stats[source_stats]["percentage_over_unlocked"] = round(float(stats[source_stats]["wits"]) / float(
+        #    stats["total"]["wits_unlocked"]) * 100, 2)
 
     print(f'\nProcessed {line_count} lines from {config.assignments_dir}')
     print(f'Stats:\n{json.dumps(stats, indent=4)}')

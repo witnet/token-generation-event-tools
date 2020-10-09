@@ -21,7 +21,7 @@ from constants import WIT_PRECISION, VESTING_DPA, VESTING_FOUNDERS, VESTING_PPA,
     BECH32_PREFIX, NANOWITS_PER_WIT
 
 
-def usd_to_nanowit(usd, rate) -> float:
+def usd_to_nanowit(usd: float, rate: float) -> float:
     return math.ceil(usd * rate / WIT_PRECISION) * WIT_PRECISION
 
 
